@@ -11,16 +11,7 @@ class BaseModel(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        # Update all instances pointing to this one
-        related_fields = [field for field in self._meta.get_fields() if field.is_relation]
-        for related_field in related_fields:
-            related_instances = getattr(self, related_field.name).all()
-            related_instances.update(is_active=self.is_active)
-
+    
     class Meta:
         abstract = True
 
@@ -115,10 +106,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField(verbose_name=_l("first name"), max_length=30, blank=False, null=False)
     last_name = models.CharField(verbose_name=_l("last name"), max_length=30, blank=False, null=False)
-    state = models.CharField(max_length=5, null=True)
-    city = models.CharField(max_length=25, null=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+    state = models.CharField(max_length=5, null=True, blank=True)
+    city = models.CharField(max_length=25, null=True, blank=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     experience = models.ForeignKey(Experience, on_delete=DO_NOTHING, null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -139,10 +130,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 class UserSportCertification(BaseModel):
     user = models.ForeignKey(User, on_delete=DO_NOTHING)
     sport = models.ForeignKey(Sports, on_delete=DO_NOTHING)
-    certification = models.ForeignKey(Certifications, on_delete=DO_NOTHING)
+    certification = models.ForeignKey(Certifications, on_delete=DO_NOTHING, null=True, blank=True)
    
     def __str__(self) -> str:
-        return f"{self.user.email} - {self.sport.name} - {self.certification.name} (ID {self.pk})"
+        certification_name = self.certification.name if self.certification else "No Certification"
+        return f"{self.user.email} - {self.sport.name} - {certification_name} (ID {self.pk})"
 
     class Meta:
         verbose_name = "User Sport Certification"
@@ -179,7 +171,7 @@ class TagsSports(BaseModel):
 class Posts(BaseModel):
     content = models.CharField(max_length=250)
     user = models.ForeignKey(User, on_delete=DO_NOTHING)
-    post = models.ForeignKey('self', null=True, on_delete=DO_NOTHING)
+    post = models.ForeignKey('self', null=True, on_delete=DO_NOTHING, blank=True)
     tags = models.ManyToManyField(Tags, through='PostsTags')
     is_edited = models.BooleanField(default=False)
 
@@ -206,7 +198,7 @@ class PostsTags(BaseModel):
 class Comments(BaseModel):
     content = models.CharField(max_length=250)
     post = models.ForeignKey(Posts, on_delete=DO_NOTHING)
-    comment = models.ForeignKey('self', null=True, on_delete=DO_NOTHING)
+    comment = models.ForeignKey('self', null=True, on_delete=DO_NOTHING, blank=True)
     user = models.ForeignKey(User, on_delete=DO_NOTHING)
     is_edited = models.BooleanField(default=False)
    
@@ -221,7 +213,7 @@ class Comments(BaseModel):
 class Likes(BaseModel):
     user = models.ForeignKey(User, on_delete=DO_NOTHING)
     post = models.ForeignKey(Posts, on_delete=DO_NOTHING)
-    like = models.ForeignKey('self', null=True, on_delete=DO_NOTHING)
+    like = models.ForeignKey('self', null=True, on_delete=DO_NOTHING, blank=True)
     
 
     def __str__(self) -> str:
