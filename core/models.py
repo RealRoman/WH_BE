@@ -3,32 +3,72 @@ from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin, Base
 from django.utils.translation import gettext_lazy as _l
 from django.utils import timezone
 
-
 def DO_NOTHING(collector, field, sub_objs, using):
-    print('collector', collector)
-    print('field', field)
-    print('sub_objs', sub_objs)
-    print('using', using)
     pass
 
 
+class BaseModel(models.Model):
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
 
-class Experience(models.Model):
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        # Update all instances pointing to this one
+        related_fields = [field for field in self._meta.get_fields() if field.is_relation]
+        for related_field in related_fields:
+            related_instances = getattr(self, related_field.name).all()
+            related_instances.update(is_active=self.is_active)
+
+    class Meta:
+        abstract = True
+
+
+
+class Experience(BaseModel):
     name = models.CharField(max_length=25)
 
+    def __str__(self) -> str:
+        return f"{self.name} (ID {self.pk})"
 
-class CertificationDifficulty(models.Model):
+    class Meta:
+        verbose_name = "Expirience"
+        verbose_name_plural = "Expirience"
+
+
+class CertificationDifficulty(BaseModel):
     name = models.CharField(unique=True, max_length=25)
 
+    def __str__(self) -> str:
+        return f"{self.name}  (ID {self.pk})"
 
-class Sports(models.Model):
+    class Meta:
+        verbose_name = "Certification difficulty"
+        verbose_name_plural = "Certification difficulty"
+
+
+class Sports(BaseModel):
     name = models.CharField(unique=True, max_length=50)
 
-class Certification(models.Model):
+    def __str__(self) -> str:
+        return f"{self.name} (ID {self.pk})"
+
+    class Meta:
+        verbose_name = "Sport"
+        verbose_name_plural = "Sports"
+
+class Certifications(BaseModel):
     name = models.CharField(unique=True, max_length=50)
     certification_difficulty = models.ForeignKey(CertificationDifficulty, on_delete=DO_NOTHING)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+ 
+    def __str__(self) -> str:
+        return f"{self.name} - {self.certification_difficulty.name} (ID {self.pk})"
+
+    class Meta:
+        verbose_name = "Certification"
+        verbose_name_plural = "Certifications"
+
 
 
 class UserManager(BaseUserManager):
@@ -79,13 +119,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     city = models.CharField(max_length=25, null=True)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-    experience = models.ForeignKey(Experience, on_delete=models.DO_NOTHING, null=True, blank=True)
+    experience = models.ForeignKey(Experience, on_delete=DO_NOTHING, null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_trainer = models.BooleanField(default=False)
 
     certification = models.ManyToManyField(
-        Certification,
+        Certifications,
         through='UserSportCertification',
     ),
     sport = models.ManyToManyField(
@@ -96,61 +136,100 @@ class User(AbstractBaseUser, PermissionsMixin):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class UserSportCertification(models.Model):
+class UserSportCertification(BaseModel):
     user = models.ForeignKey(User, on_delete=DO_NOTHING)
     sport = models.ForeignKey(Sports, on_delete=DO_NOTHING)
-    certification = models.ForeignKey(Certification, on_delete=DO_NOTHING)
+    certification = models.ForeignKey(Certifications, on_delete=DO_NOTHING)
+   
+    def __str__(self) -> str:
+        return f"{self.user.email} - {self.sport.name} - {self.certification.name} (ID {self.pk})"
+
+    class Meta:
+        verbose_name = "User Sport Certification"
+        verbose_name_plural = "User Sport Certification"
 
 
-class Tags(models.Model):
+
+class Tags(BaseModel):
     name = models.CharField(unique=True, max_length=20)
     is_user_created = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=DO_NOTHING)
     sports = models.ManyToManyField(Sports, through='TagsSports')
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+   
+    def __str__(self) -> str:
+        return f"{self.name} (ID {self.pk})"
+    
+    class Meta:
+        verbose_name = "Tag"
+        verbose_name_plural = "Tags"
 
 
-class TagsSports(models.Model):
+class TagsSports(BaseModel):
     sport = models.ForeignKey(Sports, on_delete=DO_NOTHING)
     tag = models.ForeignKey(Tags, on_delete=DO_NOTHING)
+   
+    def __str__(self) -> str:
+        return f"{self.sport.name} - {self.tag.name} (ID {self.pk})"
+    
+    class Meta:
+        verbose_name = "Tags Sports"
+        verbose_name_plural = "Tags Sports"
 
 
-class Posts(models.Model):
+class Posts(BaseModel):
     content = models.CharField(max_length=250)
     user = models.ForeignKey(User, on_delete=DO_NOTHING)
     post = models.ForeignKey('self', null=True, on_delete=DO_NOTHING)
     tags = models.ManyToManyField(Tags, through='PostsTags')
     is_edited = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return f"{self.content[:20]}... (ID {self.pk})"
+    
+    class Meta:
+        verbose_name = "Post"
+        verbose_name_plural = "Posts"
 
 
-class PostsTags(models.Model):
+class PostsTags(BaseModel):
     post = models.ForeignKey(Posts, on_delete=DO_NOTHING)
     tag = models.ForeignKey(Tags, on_delete=DO_NOTHING)
+ 
+    def __str__(self) -> str:
+        return f"{self.tag.name} - {self.post.content[:20]}... (ID {self.pk})"
+
+    class Meta:
+        verbose_name = "Posts Tags"
+        verbose_name_plural = "Posts Tags"
 
 
-class Comments(models.Model):
+class Comments(BaseModel):
     content = models.CharField(max_length=250)
     post = models.ForeignKey(Posts, on_delete=DO_NOTHING)
     comment = models.ForeignKey('self', null=True, on_delete=DO_NOTHING)
     user = models.ForeignKey(User, on_delete=DO_NOTHING)
     is_edited = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+   
+    def __str__(self) -> str:
+        return f"{self.user.email} - {self.content[:20]}... (ID {self.pk})"
+    
+    class Meta:
+        verbose_name = "Comment"
+        verbose_name_plural = "Comments"
 
 
-class Likes(models.Model):
+class Likes(BaseModel):
     user = models.ForeignKey(User, on_delete=DO_NOTHING)
     post = models.ForeignKey(Posts, on_delete=DO_NOTHING)
     like = models.ForeignKey('self', null=True, on_delete=DO_NOTHING)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    
+
+    def __str__(self) -> str:
+        return f"Like (ID {self.pk})"
+    
+    class Meta:
+        verbose_name = "Like"
+        verbose_name_plural = "Likes"
 
 
 
