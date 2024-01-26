@@ -139,3 +139,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'core.User'
+
+FIXTURE_DIRS = [
+    'workout_helper.fixtures.initial_fixtures.json'
+]

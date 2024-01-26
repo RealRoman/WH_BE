@@ -1,0 +1,233 @@
+[
+    {
+        "model": "core.experience",
+        "pk": 1,
+        "fields": {
+            "name": "Beginner",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.experience",
+        "pk": 2,
+        "fields": {
+            "name": "Intermediate",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.experience",
+        "pk": 3,
+        "fields": {
+            "name": "Expert",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.certificationdifficulty",
+        "pk": 1,
+        "fields": {
+            "name": "Easy",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.certificationdifficulty",
+        "pk": 2,
+        "fields": {
+            "name": "Medium",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.certificationdifficulty",
+        "pk": 3,
+        "fields": {
+            "name": "Hard",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.sports",
+        "pk": 1,
+        "fields": {
+            "name": "Football",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.sports",
+        "pk": 2,
+        "fields": {
+            "name": "Basketball",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.sports",
+        "pk": 3,
+        "fields": {
+            "name": "Tennis",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.sports",
+        "pk": 4,
+        "fields": {
+            "name": "Baseball",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.sports",
+        "pk": 5,
+        "fields": {
+            "name": "Soccer",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.sports",
+        "pk": 6,
+        "fields": {
+            "name": "Golf",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.sports",
+        "pk": 7,
+        "fields": {
+            "name": "Volleyball",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.sports",
+        "pk": 8,
+        "fields": {
+            "name": "Swimming",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.sports",
+        "pk": 9,
+        "fields": {
+            "name": "Hockey",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.sports",
+        "pk": 10,
+        "fields": {
+            "name": "Cricket",
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.certifications",
+        "pk": 1,
+        "fields": {
+            "name": "Sport science for beginners",
+            "certification_difficulty": 1,
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.certifications",
+        "pk": 2,
+        "fields": {
+            "name": "Advanced sport science",
+            "certification_difficulty": 2,
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.certifications",
+        "pk": 3,
+        "fields": {
+            "name": "Sport science for pro athletes",
+            "certification_difficulty": 3,
+            "is_active": true,
+            "created_at": "2024-01-26T12:00:00Z",
+            "updated_at": "2024-01-26T12:00:00Z"
+        }
+    },
+    {
+        "model": "core.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$32keGwjRkwe5Ol2VLdasg5$r/IvD8eqqxObbNTfLn3eYjIRP+pNovoRz9N6fo7OPxQ=",
+            "last_login": "2024-01-25T22:18:11.589Z",
+            "is_superuser": true,
+            "email": "admin@admin.com",
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "state": null,
+            "city": null,
+            "latitude": null,
+            "longitude": null,
+            "experience": null,
+            "is_staff": true,
+            "is_active": true,
+            "is_trainer": false,
+            "created_at": "2024-01-25T22:16:59.120Z",
+            "updated_at": "2024-01-25T22:16:59.289Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 1,
+        "fields": {
+            "action_time": "2024-01-25T22:18:29.734Z",
+            "user": 1,
+            "content_type": 7,
+            "object_id": "1",
+            "object_repr": "Experience object (1)",
+            "action_flag": 1,
+            "change_message": "[{\"added\": {}}]"
+        }
+    }
+]
